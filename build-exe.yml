@@ -1,0 +1,32 @@
+name: Build CR Tracker EXE
+
+on:
+  workflow_dispatch:      # lets you click "Run workflow" manually on GitHub
+  push:
+    paths:
+      - "cr_tracker_from_txt_app.py"
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install pyinstaller openpyxl
+
+      - name: Build the .exe
+        run: pyinstaller --onefile --windowed --name "CR Tracker" cr_tracker_from_txt_app.py
+
+      - name: Upload the .exe
+        uses: actions/upload-artifact@v4
+        with:
+          name: CR-Tracker-exe
+          path: dist/CR Tracker.exe
